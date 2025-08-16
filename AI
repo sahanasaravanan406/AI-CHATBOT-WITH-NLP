@@ -1,0 +1,32 @@
+import nltk
+import random
+import string
+nltk.download('punkt')
+nltk.download('wordnet')
+from nltk.stem import WordNetLemmatizer
+lemmatizer = WordNetLemmatizer()
+responses = {
+    "hello": ["Hi there!", "Hello!", "Hey! How can I help you?"],
+    "how are you": ["I'm doing great, thank you!", "I'm fine, how about you?"],
+    "what is your name": ["I'm an AI chatbot created with Python.", "You can call me Chatbot!"],
+    "bye": ["Goodbye!", "See you later!", "Bye! Have a great day!"]
+}
+def preprocess(sentence):
+    sentence = sentence.lower()
+    tokens = nltk.word_tokenize(sentence)
+    tokens = [lemmatizer.lemmatize(word) for word in tokens if word not in string.punctuation]
+    return tokens
+def chatbot_response(user_input):
+    user_input = preprocess(user_input)
+    for key in responses.keys():
+        if key in " ".join(user_input):
+            return random.choice(responses[key])
+    return "I'm sorry, I don't understand that."
+print("Chatbot: Hello! Type 'bye' to exit.")
+while True:
+    user_input = input("You: ")
+    if user_input.lower() == "bye":
+        print("Chatbot:", random.choice(responses["bye"]))
+        break
+    else:
+        print("Chatbot:", chatbot_response(user_input))
